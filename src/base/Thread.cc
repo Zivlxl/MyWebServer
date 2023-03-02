@@ -40,4 +40,4 @@ void CurrentThread::cacheTid() {
   }
 }
 
-}
+}  // namespace kafka

@@ -1,13 +1,14 @@
 /*
- * @Author: kafka.lxl 
- * @Date: 2023-02-16 19:39:10 
+ * @Author: kafka.lxl
+ * @Date: 2023-02-16 19:39:10
  * @Last Modified by: kafka.lxl
  * @Last Modified time: 2023-02-16 20:03:35
  */
 
 #pragma once
 
-#include<stdint.h>
+#include <stdint.h>
+
 #include "Util.h"
 
 namespace kafka {
@@ -22,25 +23,19 @@ extern __thread const char *t_threadName;
 void cacheTid();
 
 inline int tid() {
-    if (unlikely(t_cacheTid == 0)) {
-        cacheTid();
-    }
+  if (__builtin_expect(t_cacheTid == 0, 0)) {
+    cacheTid();
+  }
 
-    return t_cacheTid;
+  return t_cacheTid;
 }
 
-inline const char *tidString() {
-    return t_tidString;
-}
+inline const char *tidString() { return t_tidString; }
 
-inline int tidStringLength() {
-    return t_tidStringLength;
-}
+inline int tidStringLength() { return t_tidStringLength; }
 
-inline const char* threadName() {
-    return t_threadName;
-}
+inline const char *threadName() { return t_threadName; }
 
-};
+};  // namespace CurrentThread
 
-};
+};  // namespace kafka

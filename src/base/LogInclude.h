@@ -1,5 +1,5 @@
 /**
- * @file Thread.h
+ * @file LogInclude.h
  * @brief
  * @author ziv
  * @email
@@ -9,3 +9,6 @@
 
 #pragma once
 
+#include "LogConfiguration.h"
+#include "LogFormatter.h"
+#include "Logging.h"

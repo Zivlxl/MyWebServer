@@ -12,15 +12,17 @@
 #include <string>
 #include <vector>
 
-#include "LogLevel.h"
-#include "Logging.h"
+#include "LogConfiguration.h"
 #include "noncopyable.h"
 
 namespace kafka {
+class Logging;
 
 class LogFormatter {
  public:
   typedef std::shared_ptr<LogFormatter> LogFormatterPtr;
+
+  friend class Logging;
 
   LogFormatter() = default;
   ~LogFormatter() = default;
@@ -31,17 +33,20 @@ class LogFormatter {
 
     virtual ~FormatItem() = default;
 
-    virtual void format(std::ostream &os, LogLevel::Level level,
-                        Logging::LoggingPtr::logging) = 0;
+    virtual void format(std::ostream &os, std::shared_ptr<Logging> logging) = 0;
   };
 
-  static void setLogFormatter(const std::string pattern) { pattern_ = pattern; }
-  static std::string getLogFormatter() { return pattern_; }
+  static void setLogFormatter(const std::string &pattern) {
+    kPattern = pattern;
+  }
+  static std::string getLogFormatter() { return kPattern; }
   void init();
-  bool isError() const {reutrn error_;}
+  bool isError() const { return error_; }
+  std::ostream &format(std::ostream &os,
+                       std::shared_ptr<kafka::Logging> logging);
 
  private:
-  static std::string pattern_;
+  static std::string kPattern;
   std::vector<FormatItem::FormatItemPtr> items_;
   bool error_ = false;
 };
