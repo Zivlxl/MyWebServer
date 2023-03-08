@@ -25,14 +25,20 @@ Logging::Logging(LogConfiguration::Level level, const char *file, int line,
       thread_name_(thread_name),
       coroutine_id_(coroutine_id) {
   time_ = time(nullptr);
-  log_formatter_.init();
+  log_formatter_.reset(new LogFormatter);
+  log_formatter_->init();
 }
 
 Logging::~Logging() {
+
+}
+
+void Logging::log() {
   std::stringstream ss;
   if (level_ >= LogConfiguration::getLogLevel()) {
-    if (!log_formatter_.isError()) {
-      log_formatter_.format(ss, shared_from_this());
+    if (!log_formatter_->isError()) {
+      auto self = shared_from_this();
+      log_formatter_->format(ss, self);
     } else {
       exit(1);
     }

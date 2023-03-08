@@ -19,38 +19,55 @@ namespace kafka {
 class LogFormatter;
 
 class Logging : noncopyable, public std::enable_shared_from_this<Logging> {
- public:
+public:
   typedef std::shared_ptr<Logging> LoggingPtr;
   // friend class LogFormatter;
   Logging() = delete;
-  Logging(LogConfiguration::Level level, const char* file, int line,
-          int thread_id, const char* thread_name, int coroutine_id);
+  Logging(LogConfiguration::Level level, const char *file, int line,
+          int thread_id, const char *thread_name, int coroutine_id);
   ~Logging();
-  std::stringstream& getSS() { return ss_; }
+  std::stringstream &getSS() { return ss_; }
   std::string getContent() const { return ss_.str(); }
   LogConfiguration::Level getLevel() const { return level_; }
   int getThreadId() const { return thread_id_; }
   int getCoroutineId() const { return coroutine_id_; }
-  const char* getFile() const { return file_; }
-  const char* getThreadName() const { return thread_name_; }
+  const char *getFile() const { return file_; }
+  const char *getThreadName() const { return thread_name_; }
   int getLine() const { return line_; }
   time_t getTime() const { return time_; }
+  void log();
 
- private:
+private:
   LogConfiguration::Level level_;
   std::stringstream ss_;
-  const char* file_;
+  const char *file_;
   int line_;
   int thread_id_;
-  const char* thread_name_;
+  const char *thread_name_;
   int coroutine_id_;
   time_t time_;
-  kafka::LogFormatter log_formatter_;
+  kafka::LogFormatter::LogFormatterPtr log_formatter_;
 };
 
-#define LOG                                                                   \
-  Logging(LogConfiguration::DEBUG, __FILE__, __LINE__,                        \
-          kafka::CurrentThread::tid(), kafka::CurrentThread::threadName(), 0) \
+class LoggingWrap {
+public:
+  LoggingWrap(Logging::LoggingPtr logging) : logging_(logging) {}
+
+  ~LoggingWrap() { logging_->log(); }
+
+  Logging::LoggingPtr getLogging() const { return logging_; }
+
+  std::stringstream &getSS() { return logging_->getSS(); }
+
+private:
+  Logging::LoggingPtr logging_;
+};
+
+#define LOG                                                                    \
+  kafka::LoggingWrap(kafka::Logging::LoggingPtr(new kafka::Logging(            \
+                         LogConfiguration::DEBUG, __FILE__, __LINE__,          \
+                         kafka::CurrentThread::tid(),                          \
+                         kafka::CurrentThread::threadName(), 0)))              \
       .getSS()
 
-};  // namespace kafka
+}; // namespace kafka
