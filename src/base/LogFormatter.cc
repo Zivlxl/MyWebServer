@@ -20,6 +20,25 @@ namespace kafka {
 static std::string pattern_ =
     "%d{%Y-%m-%d %H:%M:%S}%T%t%T%N%T%F%T[%p]%T%f:%l%T%m%n";
 
+static std::string levelToString(LogConfiguration::Level level) {
+  switch(level) {
+#define XX(name) \
+    case LogConfiguration::name: \
+        return #name; \
+        break;
+
+    XX(DEBUG);
+    XX(INFO);
+    XX(WARN);
+    XX(ERROR);
+    XX(FATAL);
+#undef XX
+    default:
+      return "UNKNOW";
+  }
+  return "UNKNOW";
+}
+
 class MessageFormatItem : public LogFormatter::FormatItem {
  public:
   MessageFormatItem(const std::string& str = "") {}
@@ -32,7 +51,7 @@ class LevelFormatItem : public LogFormatter::FormatItem {
  public:
   LevelFormatItem(const std::string& str = "") {}
   void format(std::ostream& os, std::shared_ptr<Logging> logging) override {
-    os << logging->getLevel();
+    os << levelToString(logging->getLevel());
   }
 };
 

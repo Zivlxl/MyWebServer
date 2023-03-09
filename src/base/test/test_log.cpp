@@ -15,14 +15,14 @@
 using namespace kafka;
 
 int main(int argc, char **argv) {
-  std::shared_ptr<Logging> g(new Logging(LogConfiguration::DEBUG, __FILE__,
-                                         __LINE__,
-                                         kafka::CurrentThread::tid(),
-                                         kafka::CurrentThread::threadName(),
-                                         0));
+//  std::shared_ptr<Logging> g(new Logging(LogConfiguration::DEBUG, __FILE__,
+//                                         __LINE__,
+//                                         kafka::CurrentThread::tid(),
+//                                         kafka::CurrentThread::threadName(),
+//                                         0));
 
-  g->getSS() << "dddddd" << 111 << true;
-//      LOG << "dddddd" << 111 << true << std::endl;
+//  g->getSS() << "dddddd" << 111 << true;
+      LOG << "dddddd" << 111 << true << std::endl;
 //  std::cout << CurrentThread::tidString() << std::endl;
 //  std::cout << CurrentThread::tidStringLength() << std::endl;
 //  std::cout << CurrentThread::tid() << std::endl;

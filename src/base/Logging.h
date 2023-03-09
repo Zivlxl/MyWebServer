@@ -19,7 +19,7 @@ namespace kafka {
 class LogFormatter;
 
 class Logging : noncopyable, public std::enable_shared_from_this<Logging> {
-public:
+ public:
   typedef std::shared_ptr<Logging> LoggingPtr;
   // friend class LogFormatter;
   Logging() = delete;
@@ -37,7 +37,7 @@ public:
   time_t getTime() const { return time_; }
   void log();
 
-private:
+ private:
   LogConfiguration::Level level_;
   std::stringstream ss_;
   const char *file_;
@@ -50,7 +50,7 @@ private:
 };
 
 class LoggingWrap {
-public:
+ public:
   LoggingWrap(Logging::LoggingPtr logging) : logging_(logging) {}
 
   ~LoggingWrap() { logging_->log(); }
@@ -59,15 +59,25 @@ public:
 
   std::stringstream &getSS() { return logging_->getSS(); }
 
-private:
+ private:
   Logging::LoggingPtr logging_;
 };
 
-#define LOG                                                                    \
-  kafka::LoggingWrap(kafka::Logging::LoggingPtr(new kafka::Logging(            \
-                         LogConfiguration::DEBUG, __FILE__, __LINE__,          \
-                         kafka::CurrentThread::tid(),                          \
-                         kafka::CurrentThread::threadName(), 0)))              \
+#define LOG(level)                                                    \
+  kafka::LoggingWrap(kafka::Logging::LoggingPtr(new kafka::Logging(   \
+                         level, __FILE__, __LINE__, \
+                         kafka::CurrentThread::tid(),                 \
+                         kafka::CurrentThread::threadName(), 0)))     \
       .getSS()
 
-}; // namespace kafka
+#define LOG_INFO LOG(kafka::LogConfiguration::INFO)
+
+#define LOG_DEBUG LOG(kafka::LogConfiguration::DEBUG)
+
+#define LOG_WARN LOG(kafka::LogConfiguration::WARN)
+
+#define LOG_ERROR LOG(kafka::LogConfiguration::ERROR)
+
+#define LOG_FATAL LOG(kafka::LogConfiguration::FATAL)
+
+};  // namespace kafka
