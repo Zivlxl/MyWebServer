@@ -21,7 +21,7 @@ public:
 
   void wait() { pthread_cond_wait(&cond_, mutex_.get()); }
 
-  void notify() { pthread_cond_destroy(&cond_); }
+  void notify() { pthread_cond_signal(&cond_); }
 
   void notifyAll() { pthread_cond_broadcast(&cond_); }
 

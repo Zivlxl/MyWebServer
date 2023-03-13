@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
 //                                         0));
 
 //  g->getSS() << "dddddd" << 111 << true;
-      LOG << "dddddd" << 111 << true << std::endl;
+      LOG_FATAL << "dddddd" << 111 << true << std::endl;
 //  std::cout << CurrentThread::tidString() << std::endl;
 //  std::cout << CurrentThread::tidStringLength() << std::endl;
 //  std::cout << CurrentThread::tid() << std::endl;

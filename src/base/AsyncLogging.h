@@ -12,6 +12,8 @@
 #include "noncopyable.h"
 #include "Thread.h"
 #include <string>
+#include <vector>
+#include <fstream>
 
 namespace kafka {
 
@@ -33,6 +35,10 @@ public:
     thread_.join();
   }
 
+  bool reopen();
+
+  void append(std::string &str);
+
 private:
  void threadFunc();
   std::string basename_;
@@ -42,6 +48,9 @@ private:
   MutexLock mutex_;
   Condition cond_;
   CountDownLatch latch_;
+  std::vector<std::string> cur_buf_;
+  std::vector<std::string> bak_buf_;
+  std::ofstream ofs_;
 };
 
 } // namespace kafka
