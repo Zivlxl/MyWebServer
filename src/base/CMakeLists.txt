@@ -1,7 +1,10 @@
 set(LIB_SRC
         LogFormatter.cc
         Logging.cc
-        Thread.cc CountDownLatch.cc AsyncLogging.cc)
+        Thread.cc
+        CountDownLatch.cc
+        AsyncLogging.cc
+        Util.cc)
 
 add_library(libWebServerBase ${LIB_SRC})
 

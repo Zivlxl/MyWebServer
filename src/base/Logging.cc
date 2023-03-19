@@ -14,10 +14,10 @@
 #include "LogConfiguration.h"
 namespace kafka {
 LogConfiguration::Level LogConfiguration::kLevel = LogConfiguration::DEBUG;
-std::string LogConfiguration::kLogFileName = "./log.txt";
+std::string LogConfiguration::kLogFileName = "log.txt";
 
 static pthread_once_t once_control_ = PTHREAD_ONCE_INIT;
-static AsyncLogging *asyncLogging_;
+//static AsyncLogging *asyncLogging_;
 static std::unique_ptr<AsyncLogging> pAsyncLogging_;
 
 void once_init() {

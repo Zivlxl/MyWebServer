@@ -21,7 +21,7 @@ class AsyncLogging : noncopyable {
 public:
   AsyncLogging(const std::string &basename, int interval = 2);
 
-  ~AsyncLogging();
+  ~AsyncLogging() = default;
 
   void start() {
     running_ = true;

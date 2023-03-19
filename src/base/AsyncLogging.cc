@@ -31,18 +31,22 @@ void AsyncLogging::threadFunc() {
       if (cur_buf_.empty() && bak_buf_.empty()) {
         cond_.waitForSeconds(interval_);
       }
-
-      std::copy(cur_buf_.begin(), cur_buf_.end(), bak_buf_.end());
+//      std::copy(cur_buf_.begin(), cur_buf_.end(), bak_buf_.end());
+      bak_buf_.insert(bak_buf_.end(), cur_buf_.begin(), cur_buf_.end());
       cur_buf_.clear();
     }
 
     if (!bak_buf_.empty()) {
       if (!ofs_.is_open()) {
-        reopen();
+        if (!reopen()) {
+          std::cout << "open file error!" << std::endl;
+        }
+
       }
 
       std::for_each(bak_buf_.begin(), bak_buf_.end(),
-                    [&](std::string str) { ofs_ << str; });
+                    [&](const std::string &str) { ofs_ << str; });
+      bak_buf_.clear();
     }
   }
 }
